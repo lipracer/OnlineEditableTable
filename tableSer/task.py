@@ -15,7 +15,7 @@ class Task:
 
 def update_sql(table):
     try:
-        with open("pickle.db", "wb+") as f:
+        with open("pickle.db", "wb") as f:
             pickle.dump(table, f)
     except FileNotFoundError as e:
         print(e)
