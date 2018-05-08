@@ -72,3 +72,4 @@ function reqHandle(incomingMessage, response)
 	}
 	
 }
+exports.reqHandle = reqHandle;

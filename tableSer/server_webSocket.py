@@ -122,7 +122,10 @@ async def process_msg(ws, message):
         if len(mobject['text'])>10:
             list_table_all[row][col]['text']+='\n'
         '''
-        await asyncio.wait([send_handler(ws_, json.dumps(list_table_all[row][col])) for ws_ in connected if ws is not ws_])
+        
+        list_other_ws = [ws_ for ws_ in connected if ws is not ws_]
+        if len(list_other_ws)!=0:
+            await asyncio.wait([send_handler(ws, json.dumps(list_table_all[row][col])) for ws in list_other_ws])
     elif action == Operate.download:
         file_name = write_excel(dict_ip_name[ws.remote_address], list_table_all)
 

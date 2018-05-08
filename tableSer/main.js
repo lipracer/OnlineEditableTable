@@ -6,6 +6,8 @@ var url = require('url');
 // 创建服务器
 
 var exec = require('child_process').exec;
+log("start server1");
+var reqHandle = require('./processRequest.js');
 
 exec('python ./tableSer/server_webSocket.py ./ 12',function(error,stdout,stderr){
     if(stdout.length >1){
@@ -19,12 +21,12 @@ exec('python ./tableSer/server_webSocket.py ./ 12',function(error,stdout,stderr)
 });
 
 
-log("start server");
+log("start server1");
 http.createServer( function (incomingMessage, response) {  
    // 解析请求，包括文件名
    	//this.pathname = url.parse(incomingMessage.url).pathname;
 	//log("./tableSer"+this.pathname);
-    new reqHandle(incomingMessage, response);
+    new reqHandle.reqHandle(incomingMessage, response);
 
 }).listen(8080);
 
