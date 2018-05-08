@@ -71,7 +71,8 @@ def decorate_except(handler):
         except websockets.exceptions.ConnectionClosed:
             if ws in connected:
                 connected.remove(ws)          
-            print("ConnectionClosed:", ws.remote_address, dict_ip_name[ws.remote_address])
+            log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
+                  %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address]))
             #某人离开 查询是否锁住某个cell如果有 广播释放
             '''
             中途有其他人离开又会引发异常，函数递归调用了，断开连接事件需要特殊处理
@@ -121,8 +122,7 @@ async def process_msg(ws, message):
         if len(mobject['text'])>10:
             list_table_all[row][col]['text']+='\n'
         '''
-        #print(list_table_all[row][col])
-        await asyncio.wait([send_handler(ws, json.dumps(list_table_all[row][col])) for ws in connected])
+        await asyncio.wait([send_handler(ws_, json.dumps(list_table_all[row][col])) for ws_ in connected if ws is not ws_])
     elif action == Operate.download:
         file_name = write_excel(dict_ip_name[ws.remote_address], list_table_all)
 
