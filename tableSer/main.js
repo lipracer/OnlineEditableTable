@@ -6,9 +6,6 @@ var url = require('url');
 // 创建服务器
 
 var exec = require('child_process').exec;
-var arg1 = 'hello'
-var arg2 = 'jzhou'
-
 
 exec('python ./tableSer/server_webSocket.py ./ 12',function(error,stdout,stderr){
     if(stdout.length >1){

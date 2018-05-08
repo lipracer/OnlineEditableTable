@@ -6,6 +6,11 @@ if('null'==name)
 	name=prompt("请输入您的名字","大侠");
 	localStorage.setItem("name!@#$%^&*",name);
 }
+
+$("#rename").click(function(){
+	name=prompt("请输入您的名字","大侠");
+	localStorage.setItem("name!@#$%^&*",name);
+});
 console.log(name);
 insertTable();
 var server_ip = "10.5.179.84"
