@@ -50,7 +50,7 @@ def init_log():
     logger.addHandler(handler)
     return logger
 
-
+log = init_log()
 connected = set()
 dict_ip_name = {}
 list_table_all = load_table()
@@ -63,7 +63,7 @@ dict_name_lock_cell = {}
 
 #异常捕获装饰器
 def decorate_except(handler):
-    print("call  decorate_except")
+    log.info("call  decorate_except")
     async def call_handler(*args, **kw):
         ws = args[0]
         try:
@@ -71,7 +71,7 @@ def decorate_except(handler):
         except websockets.exceptions.ConnectionClosed:
             if ws in connected:
                 connected.remove(ws)          
-            print("ConnectionClosed:", ws.remote_address)
+            print("ConnectionClosed:", ws.remote_address, dict_ip_name[ws.remote_address])
             #某人离开 查询是否锁住某个cell如果有 广播释放
             '''
             中途有其他人离开又会引发异常，函数递归调用了，断开连接事件需要特殊处理
@@ -81,7 +81,7 @@ def decorate_except(handler):
                     list_table_all[pos[0]][pos[1]]['islock'] = False
             
         except asyncio.TimeoutError:
-            print("timeout")
+            log.info("timeout")
         finally:
             pass
             
@@ -161,15 +161,15 @@ async def handler(websocket, path, extra_argument):
         await recv_handler(websocket)
         #await asyncio.wait([recv_handler(ws) for ws in connected])
 
-        print("online:"+str(len(connected)))
+        log.debug("online:"+str(len(connected)))
         await asyncio.sleep(10)
     except websockets.exceptions.ConnectionClosed:
-        print(websocket.remote_address)
+        log.debug(websocket.remote_address)
     except asyncio.TimeoutError:
-        print("timeout")
+        log.warning("timeout")
     finally:
         # Unregister.
-        print(websocket.remote_address)
+        #log.info(websocket.remote_address, dict_ip_name[websocket.remote_address])
         if websocket in connected:
             connected.remove(websocket)
 
