@@ -52,6 +52,7 @@ def init_log():
 
 log = init_log()
 connected = set()
+g_dict_future = dict()
 dict_ip_name = {}
 list_table_all = load_table()
 if not list_table_all:    
@@ -59,7 +60,8 @@ if not list_table_all:
 dict_name_lock_cell = {}
 #max_pos = (0, 0)
 
-
+def get_unique_id(ws):
+    return ws.remote_address[0]+":"+str(ws.remote_address[1])
 
 #异常捕获装饰器
 def decorate_except(handler):
@@ -70,9 +72,11 @@ def decorate_except(handler):
             await handler(*args, **kw)
         except websockets.exceptions.ConnectionClosed:
             if ws in connected:
-                connected.remove(ws)          
+                connected.remove(ws)
+                g_dict_future[get_unique_id(ws)].set_result(get_unique_id(ws))
             log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
                   %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address]))
+            
             #某人离开 查询是否锁住某个cell如果有 广播释放
             '''
             中途有其他人离开又会引发异常，函数递归调用了，断开连接事件需要特殊处理
@@ -150,14 +154,23 @@ async def send_heard_pack(ws):
         pong_waiter = await ws.ping()
         await asyncio.wait_for(pong_waiter, timeout=10)
 
-    
+async def process_leave(future):
+    await future
+    print(future.result())
 
 async def handler(websocket, path, extra_argument):
     global connected
+    global g_set_future
     
     dict_ip_name[websocket.remote_address] = parse.unquote(path[1:])
     connected.add(websocket)
+    print(get_unique_id(websocket))
+    tmp_future = asyncio.Future()
+    g_dict_future[get_unique_id(websocket)] = tmp_future
     try:
+        print("process_leave S")
+        await asyncio.shield(process_leave(tmp_future))
+        print("process_leave E")
         await send_handler(websocket, json.dumps(list_table_all))
         #await asyncio.wait([send_handler(ws, " join") for ws in connected])
         #await asyncio.wait([send_heard_pack(ws) for ws in connected])
@@ -175,10 +188,10 @@ async def handler(websocket, path, extra_argument):
         #log.info(websocket.remote_address, dict_ip_name[websocket.remote_address])
         if websocket in connected:
             connected.remove(websocket)
+            g_dict_future[get_unique_id(websocket)].set_result(get_unique_id(websocket))
 
 
 if "__main__"==__name__:
-    print(sys.argv[0])
     bound_handler = functools.partial(handler, extra_argument='spam')
     start_server = websockets.serve(bound_handler, '0.0.0.0', 9000)
     asyncio.get_event_loop().run_until_complete(start_server)

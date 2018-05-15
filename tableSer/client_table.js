@@ -13,7 +13,7 @@ $("#rename").click(function(){
 });
 console.log(name);
 insertTable();
-var server_ip = "10.5.179.84"
+var server_ip = "127.0.0.1"
 var socket = null;
 var isopen = false;
 $("#down").click(function(){
