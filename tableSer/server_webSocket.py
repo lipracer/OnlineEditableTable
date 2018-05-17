@@ -10,7 +10,13 @@ import time
 from urllib import parse
 from task import *
 
+'''
+一个ip+port lock cell
+name === ip
 
+x,y --> name //根据总表查
+ip+port -> x,y
+'''
 class Operate(IntEnum):
     lock = 1
     unlock = 2
@@ -52,13 +58,15 @@ def init_log():
 
 log = init_log()
 connected = set()
-g_dict_future = dict()
+#g_dict_future = dict()
 dict_ip_name = {}
+dict_ipport_cell = {}
+
 list_table_all = load_table()
 if not list_table_all:    
     list_table_all = [[cell_info(j, i).__dict__ for i in range(7)] for j in range(100)]
-dict_name_lock_cell = {}
-#max_pos = (0, 0)
+
+
 
 def get_unique_id(ws):
     return ws.remote_address[0]+":"+str(ws.remote_address[1])
@@ -73,17 +81,23 @@ def decorate_except(handler):
         except websockets.exceptions.ConnectionClosed:
             if ws in connected:
                 connected.remove(ws)
-                g_dict_future[get_unique_id(ws)].set_result(get_unique_id(ws))
+                #g_dict_future[get_unique_id(ws)].set_result(get_unique_id(ws))
+            location = dict_ipport_cell[get_unique_id(ws)]
+            cell = cell_info(*location)
+ 
+            cell.action = Operate.unlock
+            cell.name = list_table_all[location[0]][location[1]]["name"]
+            await asyncio.wait([send_handler(ws, json.dumps(cell.__dict__)) for ws in connected])
             log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
-                  %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address]))
+                  %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address[0]]))
             
             #某人离开 查询是否锁住某个cell如果有 广播释放
             '''
             中途有其他人离开又会引发异常，函数递归调用了，断开连接事件需要特殊处理
             '''
-            if dict_name_lock_cell.get(dict_ip_name[ws.remote_address]):
-                for pos in dict_name_lock_cell[dict_ip_name[ws.remote_address]]:
-                    list_table_all[pos[0]][pos[1]]['islock'] = False
+            if dict_ipport_cell.get(get_unique_id(ws)):
+                location = dict_ipport_cell[get_unique_id(ws)]
+                list_table_all[location[0]][location[1]]['islock'] = False
             
         except asyncio.TimeoutError:
             log.info("timeout")
@@ -104,13 +118,11 @@ async def process_msg(ws, message):
     if action == Operate.lock:
         if not list_table_all[row][col]['islock']:
             list_table_all[row][col]['islock'] = True
-            #print("lock cell")
+            list_table_all[row][col]['name'] = dict_ip_name[ws.remote_address[0]]
             await asyncio.wait([send_handler(ws, json.dumps(list_table_all[row][col])) for ws in connected])
             #打开多个网页 特殊处理 设置字典加快索引
-            if dict_name_lock_cell.get(dict_ip_name[ws.remote_address]):
-                dict_name_lock_cell[dict_ip_name[ws.remote_address]].append((row, col))
-            else:
-                dict_name_lock_cell[dict_ip_name[ws.remote_address]] = [(row, col)]
+            dict_ipport_cell[get_unique_id(ws)] = (row, col)
+            print(dict_ipport_cell)
         else:
             mobject['action'] = -1
             await send_handler(ws, json.dumps(list_table_all[row][col]))
@@ -118,6 +130,7 @@ async def process_msg(ws, message):
     elif action == Operate.unlock:
         list_table_all[row][col]['islock'] = False
         list_table_all[row][col]['text'] = mobject['text']
+        list_table_all[row][col]['name'] = ''
         consume.put(Task(update_sql, list_table_all))
         await asyncio.wait([send_handler(ws, json.dumps(list_table_all[row][col])) for ws in connected])
     elif action == Operate.change:
@@ -162,15 +175,15 @@ async def handler(websocket, path, extra_argument):
     global connected
     global g_set_future
     
-    dict_ip_name[websocket.remote_address] = parse.unquote(path[1:])
+    dict_ip_name[websocket.remote_address[0]] = parse.unquote(path[1:])
     connected.add(websocket)
-    print(get_unique_id(websocket))
-    tmp_future = asyncio.Future()
-    g_dict_future[get_unique_id(websocket)] = tmp_future
+    #print(get_unique_id(websocket))
+    #tmp_future = asyncio.Future()
+    #g_dict_future[get_unique_id(websocket)] = tmp_future
     try:
-        print("process_leave S")
-        await asyncio.shield(process_leave(tmp_future))
-        print("process_leave E")
+        #print("process_leave S")
+        #await asyncio.shield(process_leave(tmp_future))
+        #print("process_leave E")
         await send_handler(websocket, json.dumps(list_table_all))
         #await asyncio.wait([send_handler(ws, " join") for ws in connected])
         #await asyncio.wait([send_heard_pack(ws) for ws in connected])
@@ -188,7 +201,7 @@ async def handler(websocket, path, extra_argument):
         #log.info(websocket.remote_address, dict_ip_name[websocket.remote_address])
         if websocket in connected:
             connected.remove(websocket)
-            g_dict_future[get_unique_id(websocket)].set_result(get_unique_id(websocket))
+            #g_dict_future[get_unique_id(websocket)].set_result(get_unique_id(websocket))
 
 
 if "__main__"==__name__:
