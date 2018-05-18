@@ -82,22 +82,23 @@ def decorate_except(handler):
             if ws in connected:
                 connected.remove(ws)
                 #g_dict_future[get_unique_id(ws)].set_result(get_unique_id(ws))
-            location = dict_ipport_cell[get_unique_id(ws)]
-            cell = cell_info(*location)
- 
-            cell.action = Operate.unlock
-            cell.name = list_table_all[location[0]][location[1]]["name"]
-            await asyncio.wait([send_handler(ws, json.dumps(cell.__dict__)) for ws in connected])
-            log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
-                  %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address[0]]))
+            if dict_ipport_cell.get(get_unique_id(ws)):
+                location = dict_ipport_cell[get_unique_id(ws)]
+                list_table_all[location[0]][location[1]]['islock'] = False
+                del dict_ipport_cell[get_unique_id(ws)]
+            
+                cell = cell_info(*location)
+     
+                cell.action = Operate.unlock
+                cell.name = list_table_all[location[0]][location[1]]["name"]
+                await asyncio.wait([send_handler(ws, json.dumps(cell.__dict__)) for ws in connected])
+                log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
+                      %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address[0]]))
             
             #某人离开 查询是否锁住某个cell如果有 广播释放
             '''
             中途有其他人离开又会引发异常，函数递归调用了，断开连接事件需要特殊处理
-            '''
-            if dict_ipport_cell.get(get_unique_id(ws)):
-                location = dict_ipport_cell[get_unique_id(ws)]
-                list_table_all[location[0]][location[1]]['islock'] = False
+            '''                
             
         except asyncio.TimeoutError:
             log.info("timeout")
