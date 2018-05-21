@@ -18,21 +18,26 @@ function reqHandle(incomingMessage, response)
 	
 	function handleGet()
 	{
-		var that = this;	
-		console.log(this.pathname);	
-		
+			
+		//alert(JSON.stringify(this.req.headers));	
+		this.contentType = {'Content-Type': 'text/html'};
+		if(this.req.headers.accept.indexOf("text/css")!=-1)
+		{
+			this.contentType = {'Content-Type': 'text/css'};
+		}
+		var that = this;
 		fs.readFile("./tableSer"+decodeURI(this.pathname), function (err, data)
 		{
 			
 			if (err) 
 			{
 				console.log(err);
-				that.response.writeHead(404, {'Content-Type': 'text/html'});
+				that.response.writeHead(404, that.contentType);
 				that.response.end();	
 			}
 			else
 			{      
-				that.response.writeHead(200, {'Content-Type': 'text/html'});			
+				that.response.writeHead(200, that.contentType);			
 				that.response.write(data); 				
 				that.response.end();				
 			}				

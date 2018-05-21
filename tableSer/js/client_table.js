@@ -1,3 +1,4 @@
+function tableView(){
 var name;
 name = localStorage.getItem("name!@#$%^&*");
 console.log(typeof(name));
@@ -221,6 +222,7 @@ function downloadFile(sUrl)
 	} 
 	window.open(sUrl, '_self');
 	return true;
+}
 }
 window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1;

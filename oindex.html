@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>crash detial</title>
+<style>
+body{
+font-family:Arial;
+font-size:14px
+line-height:180%
+padding-top: 20px
+} /*总控制，可忽略此行*/
+table tr:first-child{background:#0066CC; color:#fff;font-weight:bold;font-size:10px} /*第一行标题蓝色背景*
+</style>
+<style>
+#showTB{width:100%; height:100%;}
+#editTB{width:100%; height:100%; display:none}
+table{
+border-top:1pt
+solid: #C1DAD7
+border-left:1pt
+solid: #C1DAD7
+margin:0 auto;
+width:100%;
+} 
+
+td{ padding:5px 10px; text-align:center;border-right:1pt solid #C1DAD7;border-bottom:1pt solid #C1DAD7;}
+
+tr:nth-of-type(odd){ background:#F5FAFA;} /* odd 标识奇数行，even标识偶数行 */
+
+tr:hover{ 
+background: #E0F0F0
+padding:0px
+} /*鼠标悬停后表格背景颜色*/
+table tr td:first-child,table tr td:first-child{width:4%;}
+table tr td:first-child,table tr td:nth-child(2){width:4%;}
+table tr td:first-child,table tr td:nth-child(3){width:4%;}
+table tr td:first-child,table tr td:nth-child(4){width:4%;}
+table tr td:first-child,table tr td:nth-child(5){width:40%;}
+table tr td:first-child,table tr td:nth-child(6){width:40%;}
+table tr td:first-child,table tr td:nth-child(7){width:4%;}
+
+.tv{width:100%; height:100%;}
+.btn{left:50%; height:10%;right:0%;}
+</style>
+</head>
+<body>
+<!--
+编号
+负责人
+崩溃次数
+来源
+栈信息
+修复说明
+-->
+<button id='down'>download</button>
+<div id="showTB">
+<table width='1000' border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
+<tr>
+<td>编号</td>
+<td>负责人</td>
+<td>崩溃次数</td>
+<td>来源</td>
+<td>栈信息</td>
+<td>修复说明</td>
+<td>操作</td>
+</tr>
+</table>
+<button id="edit">Edit</button>
+</div>
+
+	<script src="./jquery.min.js"></script>
+    <script src="./client_table.js" charset="UTF-8"></script>    
+</body>
+</html>
