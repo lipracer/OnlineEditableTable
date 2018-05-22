@@ -23,6 +23,7 @@ $("#down").click(function(){
 	var jsonStr = JSON.stringify(fdata);
 	sendText(jsonStr);
 });
+
 window.onload = function() {
 	console.log(name);
 	socket = new WebSocket("ws://"+server_ip+":9000/"+name);
@@ -224,5 +225,6 @@ function downloadFile(sUrl)
 	return true;
 }
 }
-window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1;
+//window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+//window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1;
+//ssh -p 22 -i .srv_ssh/id_rsa root@10.127.22.149

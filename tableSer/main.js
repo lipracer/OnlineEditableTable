@@ -14,7 +14,7 @@ exec('python ./tableSer/server_webSocket.py ./ 12',function(error,stdout,stderr)
         console.log('you don\'t offer args');
     }
     if(error) {
-        info('stderr : '+stderr);
+        console.log('stderr : '+stderr);
     }
 });
 

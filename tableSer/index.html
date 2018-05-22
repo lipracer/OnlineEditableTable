@@ -7,13 +7,13 @@
     <link rel="stylesheet" type="text/css" href="css/nav.css" charset="utf-8">
     <link rel="stylesheet" type="text/css" href="font/iconfont.css">
 	<link rel="stylesheet" href="css/application.css" type="text/css" charset="utf-8">
+	<link rel="stylesheet" href="css/table.css" type="text/css" charset="utf-8">
 	
 	<script src="js/lib/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/lib/underscore.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/lib/backbone.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/lib/backbone-localstorage.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/client_table.js" type="text/javascript" charset="utf-8"></script>
-    
+	<script src="js/view/tableView.js" type="text/javascript" charset="utf-8"></script>    
     <script type="text/javascript" src="js/nav.js"></script>
 	
 </head>
@@ -44,8 +44,19 @@
             </li>
         </ul>
     </div>
-	<div style="text-align:center;">
-</div>
+	<div id="content">
+		<table border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
+			<tr>
+				<td>编号</td>
+				<td>负责人</td>
+				<td>崩溃次数</td>
+				<td>来源</td>
+				<td>栈信息</td>
+				<td>修复说明</td>
+			<td>操作</td>
+			</tr>
+		</table>
+	</div>
 </body>
 </html>
 

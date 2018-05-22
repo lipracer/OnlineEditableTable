@@ -37,8 +37,8 @@ $(function(){
 			console.log('应用入口方法');  
 		},  
 		renderTable: function() {  
-			var a = new tableView();
-			a.fetch();			
+			var a = new window.tableView();
+			//a.fetch();			
 		},  
 		renderDetail: function(id) {  
 			console.log('渲染详情方法, id为: ' + id);  

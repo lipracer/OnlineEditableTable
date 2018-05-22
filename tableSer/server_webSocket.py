@@ -79,6 +79,7 @@ def decorate_except(handler):
         try:
             await handler(*args, **kw)
         except websockets.exceptions.ConnectionClosed:
+            print(ws.remote_address)
             if ws in connected:
                 connected.remove(ws)
                 #g_dict_future[get_unique_id(ws)].set_result(get_unique_id(ws))
@@ -91,7 +92,8 @@ def decorate_except(handler):
      
                 cell.action = Operate.unlock
                 cell.name = list_table_all[location[0]][location[1]]["name"]
-                await asyncio.wait([send_handler(ws, json.dumps(cell.__dict__)) for ws in connected])
+                if len(connected) != 0:
+                    await asyncio.wait([send_handler(ws, json.dumps(cell.__dict__)) for ws in connected])
                 log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
                       %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address[0]]))
             
@@ -175,7 +177,7 @@ async def process_leave(future):
 async def handler(websocket, path, extra_argument):
     global connected
     global g_set_future
-    
+    log.info("connect:ip:%s port:%d" %(websocket.remote_address[0], websocket.remote_address[1]))
     dict_ip_name[websocket.remote_address[0]] = parse.unquote(path[1:])
     connected.add(websocket)
     #print(get_unique_id(websocket))
