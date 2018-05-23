@@ -30,7 +30,7 @@ $(function(){
 		routes: {  
 			'123': 'main',  
 			'EditTable': 'renderTable',  
-			'topic/:id': 'renderDetail',  
+			'DownLoad': 'downLoad',  
 			'*error': 'renderError'  
 		},  
 		main: function() {  
@@ -40,8 +40,16 @@ $(function(){
 			var a = new window.tableView();
 			//a.fetch();			
 		},  
-		renderDetail: function(id) {  
-			console.log('渲染详情方法, id为: ' + id);  
+		downLoad: function(id) {  
+			var Table = Backbone.Model.extend({  
+				url : '/save_table'  
+			});  
+			var table = new Table(); 
+			var strTable = $("#content").html();	
+			table.set({  
+				name : strTable
+			});  
+			table.save();  
 		},  
 		renderError: function(error) {  
 			console.log('URL错误, 错误信息: ' + error);  

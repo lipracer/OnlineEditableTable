@@ -17,6 +17,19 @@
     <script type="text/javascript" src="js/nav.js"></script>
 	
 </head>
+<script type="text/template" id="tpl-table">
+	<table border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
+		<tr>
+			<td><%= col0 %></td>
+			<td><%= col1 %></td>
+			<td><%= col2 %></td>
+			<td><%= col3 %></td>
+			<td><%= col4 %></td>
+			<td><%= col5 %></td>
+			<td><%= col6 %></td>
+		</tr>
+	</table>
+</script>
 <body>
     <div class="nav">
         <div class="nav-top">
@@ -32,7 +45,7 @@
 				-->
             </li>
             <li class="nav-item">
-                <a href="javascript:;"><i class="my-icon nav-icon icon_2"></i><span>发送邮件</span><i class="my-icon nav-more"></i></a>
+                <a href="DownLoad"><i class="my-icon nav-icon icon_2"></i><span>发送邮件</span><i class="my-icon nav-more"></i></a>
 				<!--
                 <ul>
                     <li><a href="javascript:;"><span>XXX</span></a></li>
@@ -45,17 +58,7 @@
         </ul>
     </div>
 	<div id="content">
-		<table border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
-			<tr>
-				<td>编号</td>
-				<td>负责人</td>
-				<td>崩溃次数</td>
-				<td>来源</td>
-				<td>栈信息</td>
-				<td>修复说明</td>
-			<td>操作</td>
-			</tr>
-		</table>
+
 	</div>
 </body>
 </html>

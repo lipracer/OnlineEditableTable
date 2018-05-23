@@ -8,6 +8,18 @@ window.tableView = Backbone.View.extend({
 
 	initialize: function() {
 		//_.bindAll(this, 'edit');
+		template: _.template($('#tpl-table').html()),
+		$("#content").html(this.template(
+		{
+			"col0" : "编号",
+			"col1" : "负责人",
+			"col2" : "崩溃次数",
+			"col3" : "来源",
+			"col4" : "栈信息",
+			"col5" : "修复说明",
+			"col6" : "操作"
+		}
+		));
 		this.server = "10.5.179.84";//that should request from server
 		this.socket = null;
 		this.isopen = false;
