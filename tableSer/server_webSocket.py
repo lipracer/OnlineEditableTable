@@ -53,7 +53,10 @@ def init_log():
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
+
+    handler_file = logging.FileHandler("log.txt")
     logger.addHandler(handler)
+    logger.addHandler(handler_file)
     return logger
 
 log = init_log()
@@ -94,8 +97,10 @@ def decorate_except(handler):
                 cell.name = list_table_all[location[0]][location[1]]["name"]
                 if len(connected) != 0:
                     await asyncio.wait([send_handler(ws, json.dumps(cell.__dict__)) for ws in connected])
-                log.info("ConnectionClosed-->ip:%s port:%d name:%s" \
-                      %(ws.remote_address[0], ws.remote_address[1], dict_ip_name[ws.remote_address[0]]))
+                name = dict_ip_name[ws.remote_address[0]]
+                if name =="":
+                    name = "无名氏"
+                log.info("ConnectionClosed-->ip:%s port:%d name:%s" %(ws.remote_address[0], ws.remote_address[1], name))
             
             #某人离开 查询是否锁住某个cell如果有 广播释放
             '''

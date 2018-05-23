@@ -8,14 +8,12 @@ console.log("start server1");
 var reqHandle = require('./processRequest.js');
 
 exec('python ./tableSer/server_webSocket.py ./ 12',function(error,stdout,stderr){
-    if(stdout.length >1){
-        console.log('you offer args:',stdout);
-    } else {
-        console.log('you don\'t offer args');
-    }
+
     if(error) {
         console.log('stderr : '+stderr);
+		return;
     }
+	console.log(stdout);
 });
 
 

@@ -8,7 +8,7 @@ window.tableView = Backbone.View.extend({
 
 	initialize: function() {
 		//_.bindAll(this, 'edit');
-		this.server = "127.0.0.1";//that should request from server
+		this.server = "10.5.179.84";//that should request from server
 		this.socket = null;
 		this.isopen = false;
 		this.socket = new WebSocket("ws://"+this.server+":9000/"+name);

@@ -6,9 +6,8 @@ var cp = require('child_process')
 
 function reqHandle(incomingMessage, response)
 {
-	console.log("new handler");	
+	console.log("new handler");
 	this.req = incomingMessage;
-	console.log(JSON.stringify(incomingMessage.headers));
 	this.response = response;
 	this.msg = new Array();
 	this.msg["GET"] = handleGet;
@@ -26,7 +25,12 @@ function reqHandle(incomingMessage, response)
 			this.contentType = {'Content-Type': 'text/css'};
 		}
 		var that = this;
-		fs.readFile("./tableSer"+decodeURI(this.pathname), function (err, data)
+		var filePath = decodeURI(this.pathname)
+		if(filePath=="/")
+		{
+			filePath+="index.html";
+		}
+		fs.readFile("./tableSer"+filePath, function (err, data)
 		{
 			
 			if (err) 
