@@ -1,14 +1,23 @@
 window.tableView = Backbone.View.extend({
-	className: 'show',
-	//template: _.template($('#tpl-show').html()),初始化模板
-
-	events: {
-		//'click .edit': 'edit'
-	},
-
 	initialize: function() {
-		//_.bindAll(this, 'edit');
-		template: _.template($('#tpl-table').html()),
+		console.log($('#tpl-table').html());
+    },
+	
+	template: _.template($('#tpl-table').html()),
+	
+	tagName: 'div',	
+	remove: function(){
+		this.tableHtml = $("#content").html();
+		if(this.socket)
+		{
+			this.socket.close();
+		}
+		
+		$("#content").html("");
+	},
+	render: function() {
+		console.log("render tableView");
+		console.log($('#tpl-table').html());
 		$("#content").html(this.template(
 		{
 			"col0" : "编号",
@@ -182,10 +191,5 @@ window.tableView = Backbone.View.extend({
 		"<td contenteditable='true'></td>"+
 		"</tr>";	
 		return trHtml;
-	},
-
-	render: function() {
-		if (this.item) this.$el.html(this.template(this.item.toJSON()));
-		return this;
 	}
 });

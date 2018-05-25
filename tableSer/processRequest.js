@@ -59,10 +59,14 @@ function reqHandle(incomingMessage, response)
 		 });
 		var that = this;
 		this.req.on('end', function () {
-			
-			console.log("body:"+body);			
+			console.log("./tableSer"+that.pathname+".html");
+			fs.writeFile("./tableSer"+that.pathname+".html", body, (err) => {
+				if (err){;
+					console.log('The file has been saved!');
+				}
+			});		
 			that.response.writeHead(200, {'Content-Type': 'text/html'}); 
-			that.response.write(JSON.stringify(tab.data)); 
+			//that.response.write(JSON.stringify(tab.data)); 
 			that.response.end();
 			/*
 			this.response.writeHead(200, {'Content-Type': 'text/html'});

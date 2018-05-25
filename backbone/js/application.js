@@ -66,7 +66,7 @@
     // 左边的侧边条视图
     var SidebarView = Backbone.View.extend({
       className: 'sidebar',
-      template: _.template($('#tpl-sidebar').html()),
+      //template: _.template($('#tpl-sidebar').html()),
       events: {
         'click footer button': 'create',
         'click input': 'filter',

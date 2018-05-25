@@ -37,25 +37,21 @@ $(function(){
 			console.log('应用入口方法');  
 		},  
 		renderTable: function() {  
-			var a = new window.tableView();
-			//a.fetch();			
+			console.log("renderTable");
+			window.tableview.render();			
 		},  
-		downLoad: function(id) {  
-			var Table = Backbone.Model.extend({  
-				url : '/save_table'  
-			});  
-			var table = new Table(); 
-			var strTable = $("#content").html();	
-			table.set({  
-				name : strTable
-			});  
-			table.save();  
+		downLoad: function() { 
+			window.tableview.remove();
+			window.downloadview.render();
+			
 		},  
 		renderError: function(error) {  
 			console.log('URL错误, 错误信息: ' + error);  
 		}  
 	});  
-  
+    window.tableview = new window.tableView();
+	window.downloadview = new window.downloadView();
 	var router = new AppRouter();  
 	Backbone.history.start();  
+	
 });
