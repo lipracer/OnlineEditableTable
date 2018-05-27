@@ -1,5 +1,6 @@
 $(function(){
     // nav收缩展开
+	
     $('.nav-item>a').on('click',function(){
         if (!$('.nav').hasClass('nav-mini')) {
             if ($(this).next().css('display') == "none") {
@@ -16,19 +17,20 @@ $(function(){
             }
         }
     });
+	
     //nav-mini切换
     $('#mini').on('click',function(){
         if (!$('.nav').hasClass('nav-mini')) {
             $('.nav-item.nav-show').removeClass('nav-show');
             $('.nav-item').children('ul').removeAttr('style');
-            $('.nav').addClass('nav-mini');
+            //$('.nav').addClass('nav-mini');
         }else{
             $('.nav').removeClass('nav-mini');
         }
     });
 	var AppRouter = Backbone.Router.extend({  
 		routes: {  
-			'123': 'main',  
+			'': 'renderTable',  
 			'EditTable': 'renderTable',  
 			'DownLoad': 'downLoad',  
 			'*error': 'renderError'  

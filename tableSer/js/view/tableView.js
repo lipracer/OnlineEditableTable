@@ -1,13 +1,15 @@
 window.tableView = Backbone.View.extend({
 	initialize: function() {
-		console.log($('#tpl-table').html());
+		var locHost = window.location.host;		
+		var ip = locHost.substring(0, locHost.indexOf(":"));
+		this.server = ip;
     },
 	
 	template: _.template($('#tpl-table').html()),
 	
 	tagName: 'div',	
 	remove: function(){
-		this.tableHtml = $("#content").html();
+		
 		if(this.socket)
 		{
 			this.socket.close();
@@ -15,9 +17,11 @@ window.tableView = Backbone.View.extend({
 		
 		$("#content").html("");
 	},
+	tableHtml: function()
+	{
+		return $("#content").html();
+	},
 	render: function() {
-		console.log("render tableView");
-		console.log($('#tpl-table').html());
 		$("#content").html(this.template(
 		{
 			"col0" : "编号",
@@ -29,7 +33,7 @@ window.tableView = Backbone.View.extend({
 			"col6" : "操作"
 		}
 		));
-		this.server = "10.5.179.84";//that should request from server
+		//this.server = "10.5.179.84";//that should request from server
 		this.socket = null;
 		this.isopen = false;
 		this.socket = new WebSocket("ws://"+this.server+":9000/"+name);
@@ -52,7 +56,7 @@ window.tableView = Backbone.View.extend({
 					{
 						for(var j=0; j<array_data[0].length; j++)
 						{
-							$thisTD = $("#tab").find("tr").eq(i+1).find("td").eq(j);
+							$thisTD = $("#tab tbody").find("tr").eq(i).find("td").eq(j);
 
 							if(array_data[i][j].islock)
 							{
@@ -62,9 +66,9 @@ window.tableView = Backbone.View.extend({
 							{
 								$thisTD.css("background-color","#ffffff");
 							}
-							if(array_data[i][j].text != $thisTD.text())
+							if(array_data[i][j].text != $thisTD.html)
 							{
-								$thisTD.text(array_data[i][j].text);
+								$thisTD.html(array_data[i][j].text);
 							}
 						}
 					}
@@ -75,13 +79,13 @@ window.tableView = Backbone.View.extend({
 					console.log(object_cell);
 					if(object_cell.action==4)
 					{
-						downloadFile("http://"+server_ip+":8080/"+object_cell.text);
+						downloadFile("http://"+server_ip+":8080/"+object_cell.html);
 						console.log("return");
 						return;
 					}
 					var row = object_cell.row;
 					var col = object_cell.col;
-					$thisTD = $("#tab").find("tr").eq(row+1).find("td").eq(col);
+					$thisTD = $("#tab tbody").find("tr").eq(row).find("td").eq(col);
 
 					if(object_cell.islock)
 					{
@@ -91,9 +95,9 @@ window.tableView = Backbone.View.extend({
 					{
 					   $thisTD.css("background-color","#ffffff");
 					}
-					if(object_cell.text != $thisTD.text())
+					if(object_cell.html != $thisTD.html())
 					{
-						$thisTD.text(object_cell.text);
+						$thisTD.html(object_cell.text);
 					}
 				}	   
 
@@ -127,15 +131,20 @@ window.tableView = Backbone.View.extend({
 		};
 		for(var i=0; i<100; i++)
 		{
-			$tr=$("#tab tr:last");
+			tbody=$("#tab tbody");
 			trHtml = this.createTRStr();
-			$tr.after(trHtml);
-			$tr=$("#tab tr:last");		
-			for(var j=0; j<$tr.find("td").length; j++)
+			tbody.html(tbody.html()+trHtml);		
+		}
+		tbody=$("#tab tbody");
+		for(var i=0; i<100; i++)
+		{
+			$tr = tbody.find("tr").eq(i);
+			for(var j=0; j<7; j++)
 			{
 				that = this;
 				$tr.find("td").eq(j).click(function(){
-					var row = $(this).parent().index()-1;
+					console.log("click");
+					var row = $(this).parent().index();
 					var col = $(this).index();
 					fdata = new format_data();
 					fdata.row = row;
@@ -146,13 +155,13 @@ window.tableView = Backbone.View.extend({
 					
 				});	
 				$tr.find("td").eq(j).blur(function(){
-					var row = $(this).parent().index()-1;
+					var row = $(this).parent().index();
 					var col = $(this).index();
 					console.log("blur:"+row+" "+col);
 					fdata = new format_data();
 					fdata.row = row;
 					fdata.col = col;				
-					fdata.text = $(this).text();
+					fdata.text = $(this).html();
 					console.log("fdata:"+fdata.text);
 					fdata.action = 2;
 					var jsonStr = JSON.stringify(fdata);
@@ -160,21 +169,19 @@ window.tableView = Backbone.View.extend({
 				});	
 				$tr.find("td").eq(j).bind("input propertychange", function(){
 					console.log("onChange");
-					var row = $(this).parent().index()-1;
+					var row = $(this).parent().index();
 					var col = $(this).index();
 					console.log("blur:"+row+" "+col);
 					fdata = new format_data();
 					fdata.row = row;
 					fdata.col = col;				
-					fdata.text = $(this).text();
+					fdata.text = $(this).html();
 					console.log("fdata:"+fdata.text);
 					fdata.action = 3;
 					var jsonStr = JSON.stringify(fdata);
 					that.sendText(jsonStr);
 				});	
-				//console.log("i:"+i+" j:"+j+":"+$tr.find("td").eq(i).text());
 			}
-			
 		}
 
 		

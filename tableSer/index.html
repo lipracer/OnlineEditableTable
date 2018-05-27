@@ -12,7 +12,9 @@
 	
 </head>
 <script type="text/template" id="tpl-table">
-	<table border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
+	<a download="下载表格" href="#DownLoad" id="excelOut"><span>下载表格</span></a>
+	<table class='table' border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
+		<thead>
 		<tr>
 			<td><%= col0 %></td>
 			<td><%= col1 %></td>
@@ -22,6 +24,9 @@
 			<td><%= col5 %></td>
 			<td><%= col6 %></td>
 		</tr>
+		</thead>
+		<tbody>
+		</tbody>
 	</table>
 </script>
 <body>
@@ -32,20 +37,9 @@
         <ul>
             <li class="nav-item">
                 <a href="#EditTable"><i class="my-icon nav-icon icon_1"></i><span>编辑表格</span><i class="my-icon nav-more"></i></a>
-				<!--
-                <ul>
-                    <li><a href="javascript:;"><span>XXX</span></a></li>
-                </ul>
-				-->
+
             </li>
-            <li class="nav-item">
-                <a href="#DownLoad"><i class="my-icon nav-icon icon_2"></i><span>下载表格</span><i class="my-icon nav-more"></i></a>
-				<!--
-                <ul>
-                    <li><a href="javascript:;"><span>XXX</span></a></li>
-                </ul>
-				-->
-            </li>
+
             <li class="nav-item">
                 <a href="javascript:;"><i class="my-icon nav-icon icon_3"></i><span>更多功能</span><i class="my-icon nav-more"></i></a>
             </li>
