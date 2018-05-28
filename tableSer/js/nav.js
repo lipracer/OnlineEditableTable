@@ -31,8 +31,7 @@ $(function(){
 	var AppRouter = Backbone.Router.extend({  
 		routes: {  
 			'': 'renderTable',  
-			'EditTable': 'renderTable',  
-			'DownLoad': 'downLoad',  
+			'EditTable': 'renderTable',
 			'*error': 'renderError'  
 		},  
 		main: function() {  
@@ -41,12 +40,7 @@ $(function(){
 		renderTable: function() {  
 			console.log("renderTable");
 			window.tableview.render();			
-		},  
-		downLoad: function() { 
-			window.tableview.remove();
-			window.downloadview.render();
-			
-		},  
+		},   
 		renderError: function(error) {  
 			console.log('URL错误, 错误信息: ' + error);  
 		}  

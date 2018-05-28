@@ -1,13 +1,63 @@
 window.tableView = Backbone.View.extend({
+
+
+	template: _.template($('#tpl-table').html()),
+	events:{
+		"click button": "download",
+		"click a": "onclickLink"
+	},
+	tagName: 'div',	
 	initialize: function() {
 		var locHost = window.location.host;		
 		var ip = locHost.substring(0, locHost.indexOf(":"));
 		this.server = ip;
+		//_.bindAll(this, 'download');
     },
-	
-	template: _.template($('#tpl-table').html()),
-	
-	tagName: 'div',	
+	onclickLink: function()
+	{
+		document.getElementById("excelOut").text = "Link";	
+	},
+	download: function()
+	{
+		function format(s, c) {
+			return s.replace(/{(\w+)}/g,
+				function (m, p) {
+					return c[p];
+			});
+		}
+		function base64(s)
+		{
+			return window.btoa(unescape(encodeURIComponent(s)));
+		}
+		function tableToExcel(tableid, sheetName)
+		{
+			var uri = 'data:application/vnd.ms-excel;base64,';
+			var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">' +    
+				'<head>'+
+				'<meta charset="utf-8">'+
+				' <style type="text/css">' +
+				".table{border-top:1pt;solid: #C1DAD7;border-left:1pt;solid: #C1DAD7;margin:0 auto;width:100%;word-wrap:break-word;word-break:break-all;}"+
+				".table thead tr{background:#0066CC;color:#fff;font-weight:bold;font-size:20px}"+
+				"td{padding:5px 10px;text-align:left;border-right:1pt solid #C1DAD7;border-bottom:1pt solid #C1DAD7;}"+
+				"tr:nth-of-type(odd){background:#F5FAFA;}"+
+				".table tr td:first-child{width:4%;}"+
+				".table tr td:nth-child(2){width:4%;}"+
+				".table tr td:nth-child(3){width:4%;}"+
+				".table tr td:nth-child(4){width:4%;}"+
+				".table tr td:nth-child(5){width:40%;}"+
+				".table tr td:nth-child(6){width:40%;}"+
+				".table tr td:nth-child(7){width:4%;}"+
+				'</style>' +
+				'</head><body>{table}</body></html>';
+			//console.log(window.tableview.tableHtml());
+			var ctx = {worksheet: sheetName || 'Worksheet', table: window.tableview.tableHtml()};
+			var strHtml = format(template, ctx);
+			//console.log(strHtml);
+			document.getElementById("excelOut").href = uri + base64(strHtml);	
+			document.getElementById("excelOut").text = "点击下载";				
+		}
+		tableToExcel('tableToExcel', 'Crash Info');
+	},
 	remove: function(){
 		
 		if(this.socket)
@@ -19,10 +69,15 @@ window.tableView = Backbone.View.extend({
 	},
 	tableHtml: function()
 	{
-		return $("#content").html();
+		return $("#divtab").html();
 	},
 	render: function() {
-		$("#content").html(this.template(
+
+		if($("#content").html!="")
+		{
+			this.remove();
+		}
+		this.$el.html(this.template(
 		{
 			"col0" : "编号",
 			"col1" : "负责人",
@@ -33,6 +88,8 @@ window.tableView = Backbone.View.extend({
 			"col6" : "操作"
 		}
 		));
+		//console.log($("#dwn"));
+		//document.getElementById("#dwn").click = this.download;
 		//this.server = "10.5.179.84";//that should request from server
 		this.socket = null;
 		this.isopen = false;
@@ -108,8 +165,10 @@ window.tableView = Backbone.View.extend({
 			this.socket = null;
 			this.isopen = false;
 		}
-		this.insertTable();
 		
+		$("#content").html(this.el);  
+        this.delegateEvents();  
+		this.insertTable();
 	},
 	sendText: function(text) {
 		if (this.isopen) {

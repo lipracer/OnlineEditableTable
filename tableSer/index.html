@@ -12,8 +12,10 @@
 	
 </head>
 <script type="text/template" id="tpl-table">
-	<a download="下载表格" href="#DownLoad" id="excelOut"><span>下载表格</span></a>
-	<table class='table' border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
+<button id="#dwn">生成链接</button>
+<a download="下载表格" href="#DownLoad" id="excelOut">Link<span></span></a>
+<div id="divtab">
+	<table  class='table' border='0' cellspacing='0' cellpadding='0' align='center' id="tab">
 		<thead>
 		<tr>
 			<td><%= col0 %></td>
@@ -28,6 +30,7 @@
 		<tbody>
 		</tbody>
 	</table>
+</div>
 </script>
 <body>
     <div class="nav">
