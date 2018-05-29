@@ -6,7 +6,6 @@ var cp = require('child_process')
 
 function reqHandle(incomingMessage, response)
 {
-	console.log("new handler");
 	this.req = incomingMessage;
 	this.response = response;
 	this.msg = new Array();

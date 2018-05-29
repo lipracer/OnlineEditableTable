@@ -15,6 +15,7 @@ word-wrap:break-word;word-break:break-all;
 .table tbody tr:nth-of-type(odd){ background:#F5FAFA;} /* odd 标识奇数行，even标识偶数行 */
 
 .table tbody tr:hover{background: #E0F0F0;padding:0px;} /*鼠标悬停后表格背景颜色*/
+.table tr td{font-size:12px;}
 .table tr td:first-child{width:4%;}
 .table tr td:nth-child(2){width:4%;}
 .table tr td:nth-child(3){width:4%;}

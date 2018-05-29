@@ -22,7 +22,13 @@ http.createServer( function (incomingMessage, response) {
    // 解析请求，包括文件名
    	//this.pathname = url.parse(incomingMessage.url).pathname;
 	//console.log("./tableSer"+this.pathname);
-    new reqHandle.reqHandle(incomingMessage, response);
+	try{
+		new reqHandle.reqHandle(incomingMessage, response);
+	}
+	catch(err)
+	{
+		console.log(err);
+	}
 
 }).listen(8080);
 
