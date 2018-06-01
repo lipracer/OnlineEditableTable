@@ -152,7 +152,7 @@ window.tableView = Backbone.View.extend({
 					{
 					   $thisTD.css("background-color","#ffffff");
 					}
-					if(object_cell.html != $thisTD.html())
+					if(object_cell.text != $thisTD.html())
 					{
 						$thisTD.html(object_cell.text);
 					}
